@@ -1,0 +1,1 @@
+# diversity-in-economic-seminars
