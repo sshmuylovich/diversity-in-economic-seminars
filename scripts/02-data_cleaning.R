@@ -32,7 +32,8 @@ df <-
     urm_female = ifelse(tolower(demographic) == "urm female", 1, 0)
   ) %>%
   # Drop demographic column
-  select('seminar_id', 'semester', 'urm', 'female', 'urm_female', 'region')
+  select('seminar_id', 'semester', 'urm', 'female', 'urm_female', 'region') %>%
+  mutate(across(c(region), ~ifelse(. == "n/a", "Unknown", .)))
 
 # Analyze Gender of Speakers 
 gender <- df %>%
