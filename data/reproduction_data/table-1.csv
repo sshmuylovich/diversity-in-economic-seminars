@@ -1,0 +1,21 @@
+dimension,variable,label,n,percent
+presentation,n,\(N\),6997,NA
+seminar,n,\(N\),3458,NA
+presentation,demographics,Non-URM male,5326,0.7696531791907515
+presentation,demographics,Non-URM female,1594,0.23034682080924856
+presentation,demographics,URM male,44,0.5714285714285714
+presentation,demographics,URM female,33,0.42857142857142855
+seminar,demographics,Non-URM male,2658,0.7771929824561403
+seminar,demographics,Non-URM female,762,0.22280701754385965
+seminar,demographics,URM male,24,0.631578947368421
+seminar,demographics,URM female,14,0.3684210526315789
+presentation,regions,International,791,0.11304844933542947
+presentation,regions,Midwest,485,0.06931542089466915
+presentation,regions,Northeast,1880,0.26868657996284123
+presentation,regions,South,1623,0.23195655280834643
+presentation,regions,West,2218,0.31699299699871375
+seminar,regions,International,615,0.12018760992769201
+seminar,regions,Midwest,442,0.08637873754152824
+seminar,regions,Northeast,1345,0.26284932577682235
+seminar,regions,South,1269,0.2479968731678718
+seminar,regions,West,1446,0.2825874535860856

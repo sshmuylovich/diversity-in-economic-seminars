@@ -11,6 +11,7 @@ library(tidyverse)
 library(dplyr)
 
 #### Analyze data ####
+# Import clean data
 clean_data <- read_csv("data/clean_data/clean_data.csv", col_names=TRUE, col_types=cols())
 
 # Analyze Gender of Speakers 

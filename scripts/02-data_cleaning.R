@@ -25,13 +25,21 @@ clean_data <-
   # Split demographic column into two columns, underepresented minority and female
   mutate(
     # Check if 'non-urm' is present in the demographic column, case-insensitive
-    urm = ifelse(grepl("non-urm", demographic, ignore.case = TRUE), 1, 0), 
+    urm = ifelse(grepl("non-urm", demographic, ignore.case = TRUE), "Non-URM", "URM"), 
     # Check if 'female' is present in the demographic column, case-insensitive
-    female = ifelse(grepl("female", demographic, ignore.case = TRUE), 1, 0),
+    gender = ifelse(grepl("female", demographic, ignore.case = TRUE), "Female", "Male"),
   ) %>%
-  # Drop demographic column
-  select('seminar_id', 'semester', 'urm', 'female', 'region') %>%
-  mutate(region = ifelse(is.na(region), "Unknown", region))
+  # Mutate demographic column
+  mutate(demographic = case_when(
+    demographic == "Non-URM male" ~ "Non-URM Male",
+    demographic == "Non-URM female" ~ "Non-URM Female",
+    demographic == "URM male" ~ "URM Male",
+    demographic == "URM female" ~ "URM Female"
+  )) %>%
+  mutate(region = ifelse(is.na(region), "International", region)) %>%
+  # Order
+  select(seminar_id, semester, urm , gender, demographic, region)
+  
 
 #### Save data ####
 write_csv(clean_data, "data/clean_data/clean_data.csv")

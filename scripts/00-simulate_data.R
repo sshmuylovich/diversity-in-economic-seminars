@@ -1,10 +1,10 @@
 #### Preamble ####
-# Purpose: Simulates datasets regarding neighbourhood crime in Toronto
+# Purpose: Simulates datasets regarding economic seminar speaker diversity from 2014 to 2019
 # Author: Sima Shmuylovich
-# Date: 25 January 2024
+# Date: 15 February 2024
 # Contact: sima.shmuylovich@mail.utoronto.ca
 # License: MIT
-# Pre-requisites: Run "import_packages.R"
+# Pre-requisites: Run "import_packages.R" before running this script.
 
 #### Loading Packages ####
 library(tidyverse)
@@ -13,74 +13,68 @@ library(tidyverse)
 set.seed(483)
 
 ### Global Variables ###
-# Simulating data between 2014 and 2023
-starting_year <- 2014 
-ending_year <- 2023
-num_years <- ending_year - starting_year + 1 # Number of years observed
-num_crime_types <- 8 # Number of crime types
+semester_options <- as.Date(c("2014-01-01", "2014-08-01",
+                              "2015-01-01", "2015-08-01",
+                              "2016-01-01", "2016-08-01",
+                              "2017-01-01", "2017-08-01",
+                              "2018-01-01", "2018-08-01",
+                              "2019-01-01", "2019-08-01"))
+urm_options <- c("URM", "Non-URM")
+gender_options <- c("Female", "Male")
+region_options <- c("Midwest", "Northeast", "South", "International", "West")
+num_rows <- 100
 
-## Dataset 1: Simulate year and number of automobile thefts. 
-# Expected Columns: year | num_automobile_thefts
-automobile_thefts_data_simulation <-
+## Dataset: Simulate seminar id, semester, urm status, gender, and host department geographical region. 
+# Expected Columns: seminar_id | semester | urm | gender | region
+speaker_diversity_data_simulation <-
   tibble(
-    # Sequence of years between <starting_year> and <ending_year> inclusive
-    year = c(starting_year:ending_year),
-    # Sequence of <num_years> Random variables representing the number of 
-    # automobile thefts. 
+    # Sequence of <seminar_id>. Random variables representing the id of the seminar a speaker spoke at.
     # Use Uniform Distribution
     # Round Random variables to whole numbers
-    num_automobile_thefts = round(runif(n=num_years, min = 0, max = 15000))
+    seminar_id = round(runif(n=num_rows, min = 1, max = 15000)),
+    # Sequence of <semester>. Simulated from semester_options. 
+    semester = sample(semester_options, num_rows, replace = TRUE),
+    # Sequence of <urm>. Simulated from urm_options 
+    urm = sample(urm_options, num_rows, replace = TRUE),
+    # Sequence of <gender>. Simulated from gender_options 
+    gender = sample(gender_options, num_rows, replace = TRUE),
+    # Sequence of <region>. Simulated from region_options 
+    region = sample(region_options, num_rows, replace = TRUE)
   )
 # Create table for the simulated data
-automobile_thefts_data_simulation
-
-## Dataset 3: Simulate year, crime type, and number of occurrences. 
-# Expected Columns: year | crime_type | num_crime_occurrences 
-all_crime_data_simulation <-
-  tibble(
-    # Sequence of years between <starting_year> and <ending_year> inclusive
-    # Each year repeats <num_crime_types> 
-    # i.e (2014, 2014, 2015, 2015, 2016, 2016, 2017, 2017)
-    year = rep(c(starting_year:ending_year), each=num_crime_types),
-    # Sequence of all crime types repeating <num_years> times
-    crime_type = rep(c("Assault", "Automobile-Theft", "Bike-Theft", "Break-and-Enter", 
-                       "Homicide", "Robbery", "Shooting", "Theft-from-Vehicle"
-                       ), num_years),
-    # Sequence of <num_years> * <num_crime_types> Random variables
-    # Use Uniform Distribution
-    # Round Random variables to whole numbers
-    num_crime_occurrences = round(runif(n=num_years * num_crime_types, min = 0, max = 30000))
-  )
-# Create table for the simulated data
-all_crime_data_simulation
+speaker_diversity_data_simulation <- speaker_diversity_data_simulation %>% mutate(demographic = case_when(
+  urm == "Non-URM" & gender == "Male"~ "Non-URM Male",
+  urm == "Non-URM" & gender == "Female"~ "Non-URM Female",
+  urm == "URM" & gender == "Male"~ "URM Male",
+  urm == "URM" & gender == "Female"~ "URM Female"
+))
 
 # Dataset 1: Data Validation/Tests
-# 1. "year" does not contain years before <starting_year> or after <ending_year>
-automobile_thefts_data_simulation$year %>% min() == starting_year
-automobile_thefts_data_simulation$year %>% max() == ending_year
+# 1. <sequence_id> is of type integer or double
+speaker_diversity_data_simulation$seminar_id %>% typeof() %in% c("double", "integer") == TRUE
 
-# 2. <num_automobile_thefts> is greater than or equal to 0.
-automobile_thefts_data_simulation$num_automobile_thefts %>% min() >= 0
+# 2. <sequence_id> is positive
+speaker_diversity_data_simulation$seminar_id %>% min() >= 0
 
-# Dataset 3: Data Validation/Tests
-# 1. "year" does not contain years before <starting_year> or after <ending_year>
-all_crime_data_simulation$year %>% min() == starting_year
-all_crime_data_simulation$year %>% max() == ending_year
+# 3. <semester> is between 2014 and 2019 inclusive
+speaker_diversity_data_simulation$semester %>% min() >= as.Date("2014-01-01")
+speaker_diversity_data_simulation$semester %>% min() <= as.Date("2020-01-01")
 
-# 2. We have <num_crime_types> types of crime: "Assault", "Automobile-Theft", 
-# "Bike-Theft", "Break-and-Enter", "Homicide", "Robbery", "Shooting", 
-# "Theft-from-Vehicle"
-all_crime_data_simulation$crime_type %>%
-  unique() %>%
-  length() == num_crime_types
+# 4. <semester> MM-DD is either 01-01 or 08-01
+all(speaker_diversity_data_simulation$semester %>% format("%m") %in% c("01", "08"))
+all(speaker_diversity_data_simulation$semester %>% format("%d") == "01")
 
-all_crime_data_simulation$crime_type %>%
-  unique() %in% c("Assault", "Automobile-Theft", "Bike-Theft", "Break-and-Enter", 
-                  "Homicide", "Robbery", "Shooting", "Theft-from-Vehicle")
+# 5. <urm> is as expected
+all(speaker_diversity_data_simulation$urm %in% c("URM", "Non-URM"))
 
-# 3. Number of crime occurrences is equal to or greater than 0
-all_crime_data_simulation$num_crime_occurrences %>% min() >= 0
+# 6. <gender> is as expected
+all(speaker_diversity_data_simulation$gender %in% c("Female", "Male"))
 
+# 7. <region> is as expected
+all(speaker_diversity_data_simulation$region %>% unique() %in% c("Midwest", "Northeast", "South", "International", "West"))
+
+#8. <demographic> is as expected
+all(speaker_diversity_data_simulation$demographic %>% unique() %in% c("Non-URM Male", "Non-URM Female", "URM Male", "URM Female"))
 
 
 

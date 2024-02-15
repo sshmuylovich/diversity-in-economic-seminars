@@ -1,12 +1,12 @@
 ---
-title: "Analyzing the Dynamics of Automobile Theft in Toronto"
-subtitle: "A Decade of Surge in Comparison to Other Crimes, with a Focus on Persistent Spatial Disparities"
+title: "Analyzing the Diversity of Invited Speakers at Economic Seminars from 2014 to 2019"
+subtitle: "Replication of Jennifer L. Doleac, Erin Hengel, and Elizabeth Pancotti's 'Diversity in Economics Seminars: Who Gives Invited Talks?'"
 author: 
   - Sima Shmuylovich
-thanks: "Code and data are available at: https://github.com/sshmuylovich/toronto-automobile-theft.git."
-date: 25 January 2024
+thanks: "Code and data are available at: https://github.com/sshmuylovich/diversity-in-economic-seminars.git; Replication on Social Science Reproduction platform available at: ..."
+date: 15 February 2024
 date-format: long
-abstract: This paper investigates the changing landscape of automobile theft in Toronto over the past decade, comparing its growth to that of other crimes. Notably, this paper explores the intriguing phenomenon that despite the significant increase in automobile theft's prevalence, it has not expanded to encompass new neighborhoods. This paper aims to provide an in-depth analysis of automobile theft in Toronto, its evolution over the past decade, and its interplay with other crime categories as well as neighbourhood geography. In a broader context, this research contributes to the academic discourse on urban criminology and offers valuable insights for policymakers, law enforcement agencies, and urban planners.
+abstract: This paper investigates the diversity of speakers in economic seminars from 2014 to 2019, looking at gender identity and whether or not a speaker belongs to an ethnically unrepresented minority. 1) what was done, 2) what was found, and 3) why this matters (all at a high level).
 format: pdf
 toc: true
 number-sections: true
@@ -18,13 +18,13 @@ bibliography: references.bib
 #| warning: false
 #| message: false
 #### Preamble ####
-# Purpose: Output a PDF that tells a story about Automobile Theft in Toronto using graphs and tables for support. 
+# Purpose: Output a PDF that tells a story about the diversity of speakers at economic seminars using graphs and tables for support. 
 # Author: Sima Shmuylovich
-# Date: 25 January 2024
+# Date: 15 February 2024
 # Contact: sima.shmuylovich@mail.utoronto.ca
 # License: MIT
-# Pre-requisites: Run "import_packages.R", "01-download_data.R", and
-# "02-data_cleaning.R"
+# Pre-requisites: Run "99-import_packages.R", "99-reproduction.R", "01-download_data.R", and
+# "02-data_cleaning.R" before running this script.
 ```
 
 ```{r}
@@ -38,198 +38,123 @@ library("opendatatoronto")
 library("janitor") 
 library("dplyr")
 library("ggplot2") 
-library("sf") 
-library("patchwork")
+library("kableExtra")
 ```
 
 # Introduction {#sec-introduction}
-**Introduction**
+**The Importance of Analyzing Diversity of Invited Speakers at Economic Seminars** In the landscape of academia, the need to foster diversity and inclusion has emerged as a central pillar in the pursuit of equity, scholarly excellence, and societal relevance. 
 
-Toronto, Canada's largest city, has witnessed various transformations in its urban landscape over the past decade. With these changes, the city's crime dynamics, particularly pertaining to automobile theft, have evolved. This paper presents a comprehensive analysis of automobile theft in Toronto from 2014 to 2023, offering a comparison with the progression of other major crimes during the same period. These include assault, bike theft, break and enter, robbery, shooting, homicide, and theft from a motor vehicle. This study also explores the geographical distribution of automobile theft across Toronto's 158 neighborhoods, providing insights into spatial trends and patterns [@citecrime]. 
+Firstly, the commitment to diversity and inclusion within academic settings mirrors broader societal values that emphasize fairness, equity, and justice. By scrutinizing the composition of invited speakers at economic seminars, academic institutions can assess their alignment with these values, ensuring they do not perpetuate historical biases or exclusionary practices. This reflective process is crucial for fostering an academic culture that not only respects but actively promotes diversity. 
 
-The findings of this study are significant for several reasons. Firstly, they provide a nuanced understanding of how automobile theft, as a specific crime category, fits into the broader context of urban crime in Toronto. Secondly, the spatial analysis of crime distribution aids in identifying neighbourhoods that require focused policing and community intervention. Finally, this research contributes to the academic discourse on urban criminology, offering valuable insights for policymakers, law enforcement agencies, and urban planners. 
+Secondly, diversity of seminar speakers significantly enriches academic discourse. Diversity of perspective introduces new viewpoints, methodologies, and inquiries all of which are instrumental in driving innovative, robust, and comprehensive research outcomes. The exchange of diverse ideas catalyzes critical thinking and creativity, which are essential for the advancement of knowledge and the solving of complex economic problems. 
 
-Two months ago, CP24 reported that auto theft reached 'historic highs' for Ontario in 2022 which saw Auto Insurers paying over \$1 billion in theft claims [@citecp24]. In May 2023, Ontario's solicitor general announced a budget of $51 million for the creation of a new organized crime and auto theft task force led by the Ontario Provincial Police [@citecbc]. It is all that more prevalent, therefore, to be conducting and publishing research that might aid in the slow-down of auto theft in Toronto.
+Thirdly, when individuals from underrepresented groups see successful figures who resemble them, it reinforces the belief that academic and research success is attainable for everyone, irrespective of their gender, race, or geographic origin. This aspect of diversity analysis is paramount for cultivating an inclusive academic environment where all members feel valued and motivated.
 
-The paper is structured as follows: following this introduction, the second section provides a review of relevant literature. The third section details the methodology, followed by a presentation and discussion of the findings in the fourth section. The paper concludes with implications for policy and suggestions for future research.
+Invited seminar talks are a primary way that economists: 1) get feedback on their work, 2) disseminate their research, and 3) build their professional networks. Not only are there benefits to the faculties who extend the invitations, but those invitations also have positive externalities to the speaker. Current gender and racial disparities in the field of economics may be exacerbated by disparities in who is invited to give seminar talks. Thus far, data limitations have prevented an informed discussion of this possibility. This paper aims to provide descriptive evidence on who gives invited seminar talks in economics, based on an extensive, ongoing data collection effort conducted by Jennifer L. Doleac, Erin Hengel, and Elizabeth Pancotti [@citeRepPaper].
+
+This paper presents an analysis of the diversity of invited speakers at economic seminars across a range of universities over a six-year period, from 2014 to 2019. Specifically, the paper focused on three critical dimensions of diversity: gender, whether speakers are from underrepresented minorities (URMs), and the geographic region of the hosting institutions.
+
+The structure of this paper comprises three sections: Data, Results, and Discussion. In the Data section (@sec-data), we discuss the data source and the process of measuring and cleaning the datasets from the replicated paper [@citeRepPaper]. The Results section (@sec-results) summarizes the findings, presenting graphs to illustrate trends. The Discussion section (@sec-discussion) delves into the analysis of our findings, exploring .... Additionally, we discuss limitations and propose avenues for further research, concluding the paper.
+
 
 # Data {#sec-data}
-The data used by the paper is 'Neighbourhood Crime Rates' [@citecrime], which was sourced from Open Data Toronto Portal. This dataset was accessed using the `opendatatoronto` library [@citeopendatatoronto]. The dataset was then simulated, cleaned, analyzed, and tested using the statistical programming language `R` [@citer], 'tidyverse' [@citetidyverse], 'janitor'[@citejanitor], 'dplyr' [@citedplyr], 'ggplot2' [@citeggplot2], 'sf' [@citesf], and 'knitr' [@citeknitr]. 
+The dataset used in this study is sourced from the replication package linked to Doleac, Hengel, and Pancotti's paper [@citeRepPaper]. Using the R programming language [@citeR], data cleaning and analysis procedures were performed, making use of various R libraries and packages including tidyverse [@citeTidyverse], janitor [@citeJanitor], ggplot2 [@citeGgplot], knitr [@citeKnitr], readr [@citeReadr], and dplyr [@citeDplyr].
 
+The data cleaning and analysis procedures were replicated from the original paper to maintain consistency in the datasets used. The primary aim of this analysis is to evaluate diversity of economics seminar speakers, with a particular focus on gender and URM status and across universities in the United States, identifying demographic, geographical, and temporal trends.
+
+The following sections will offer a thorough examination of the raw data in (@sec-data-raw), explore the data cleansing process in (@sec-data-clean), and then delve into the measurement considerations in (@sec-data-measurement).
+
+## Raw Data {#sec-data-raw}
+```{r}
+#| include: false
+#| warning: false
+#| message: false
+
+# LOAD DATA
+raw_data <- read_csv("../data/raw_data/raw_data.csv")
+```
+Doleac, Hengel, and Pancotti developed a list of economics and economics-adjacent departments in the United States and abroad, using a variety of sources. As a part of their data collection process, Doleac, Hengel, and Pancotti webscraped information on seminar schedules from university department websites [@citeRepPaper]. Their raw data was then stored in their replication package as a csv file, 'data.csv' and acts as this study's raw dataset. 
+
+Doleac, Hengel, and Pancotti recorded the demographic characteristics (gender and URM status) of the seminar speakers based on information listed on their website or CV and the location of their undergraduate institution. In their paper, they acknowledge that these are imperfect proxies for actual gender and URM status, and are best interpreted as indicating how that person is perceived by others. Furthermore, Doleac, Hengel, and Pancotti interpreted URM status as whether someone grew up as an underrepresented minority, facing the various disadvantages that URM status implies (fewer role models in economics who look like you, and bias from peers, educators, and supervisors). In their paper, they used the following definition of URM status: black, Latinx, or Native American, and grew up in U.S [@citeRepPaper].
+
+Presented in @tbl-raw_data are the first six speakers that appear in the raw data. The subsequent section (@sec-data-clean) will show the data cleaning process, brining clarity to the structure of the refined dataset used for analysis.
+
+```{r}
+#| echo: false
+#| eval: true
+#| label: tbl-raw_data
+#| tbl-cap: "Raw data showing the first 6 invited speakers"
+#| warning: false
+
+result <- kable(head(raw_data), "latex", booktabs = TRUE) %>%
+  kable_styling(latex_options = c("scale_down"))
+
+result
+```
+
+
+
+## Cleaned Data {#sec-data-clean}
+```{r}
+#| include: false
+#| warning: false
+#| message: false
+
+# LOAD DATA
+clean_data <- read_csv("../data/clean_data/clean_data.csv")
+```
+While Doleac, Hengel, and Pancotti restricted their sample to include only talks by scholars who had a Ph.D. at the time (excluding graduate students) and external speakers (excluding speakers from the same institution as the host department), this study does. Nor does this study restrict its sample to talks by scholars who are economists (defined by Doleac, Hengel, and Pancotti as having an economics or economics-adjacent Ph.D., or being affiliated with an economics department). 
+
+The dataset has been refined to include only five variables: Seminar ID, Semester, URM Status, Gender, and Geographical Region of Host Department. Cleaning splitting the raw Demographic Variable into URM Status and Gender and replacing NA values in the geographical region column with "International" as explained in Doleac, Hengel, and Pancotti's data collection process. 
+
+Presented in @tbl-clean_data are the first six speakers along with the semester the seminar took place in, the speaker's URM status, the speaker's gender, and the geographical region of the seminar's host department. I have excluded the seminar ID the speaker's talk was a part of from the table because it is long and unreadable. However, it is important to note that it does exist in the actual cleaned data. 
+
+```{r}
+#| echo: false
+#| eval: true
+#| label: tbl-clean_data
+#| tbl-cap: "Cleaned Data showing the first attributed of the first 6 economics seminar speakers"
+#| warning: false
+
+clean_data <- read_csv("../data/clean_data/clean_data.csv", show_col_types = FALSE)
+
+table_clean_data <- clean_data %>%
+  rename(
+    'Semester' = semester,
+    'URM Status' = urm, 
+    'Gender' = gender,
+    'Geographical Region of Host Department' = region,
+  ) 
+
+kable(head(table_clean_data))
+```
+
+## Measurement {#sec-data-measurement}
+```{r}
+#| include: false
+#| warning: false
+#| message: false
+
+# LOAD DATA
+clean_data <- read_csv("../data/clean_data/clean_data.csv")
+analysed_data <- read_csv("../data/analysis_data/analysed_data.csv")
+analysed_regional_data <- read_csv("../data/analysis_data/analysed_regional_data.csv")
+```
+TODO...
+
+The subsequent section (@sec-results) will present the results of our analysis, offering insights into ..., and the implications of the findings.
 
 # Results {#sec-results}
-```{r}
-#| include: false
-#| warning: false
-#| message: false
-
-# Read in Automobile Thefts Data
-automobile_thefts_data <- read_csv("../data/cleaned_automobile_thefts_data.csv")
-
-# Read in Map Data
-map_data <- readRDS("../data/cleaned_map_data.rds") 
-map_data_csv <- read_csv("../data/cleaned_map_data.csv") %>%
-  filter(!is.na(num_automobile_thefts))
-
-# Read in All Crime Thefts Data
-all_crime_data <- read_csv("../data/cleaned_all_crime_data.csv")
-```
-
-### Automobile Theft Across All of Toronto Over the Past Decade (2014-2023) 
-With auto theft having reached 'historic highs' for Ontario in 2022, this paper investigated how many vehicles were stolen in Toronto, Ontario's largest city, annually over the past decade. The following data was obtained:
 
 ```{r}
-#| label: tbl-autothefttable
-#| tbl-cap: The number of motor vehicles reported stolen each year from 2014 to 2023.
-#| echo: false
-#| warning: false
-#| message: false
+ggplot(analysed_data, aes(x = semester, y = total)) +
+  geom_line() + # or geom_col() for a bar plot
+  geom_point() +
+  theme_minimal() +
+  labs(title = "Total Enrollments Over Semesters", x = "Semester", y = "Total Enrollments")
 
-automobile_thefts_data %>% rename (
-    "Year" = year,
-    "Number of Automobile Thefts" = num_automobile_thefts
-  ) %>%
-  head() %>%
-  kable() 
 ```
 
-```{r}
-#| include: false
-#| warning: false
-#| message: false
-global_min <- min(map_data_csv$num_automobile_thefts)
-global_max<- max(map_data_csv$num_automobile_thefts)
-
-create_plot <- function(attribute, year) {
-  ggplot() +
-    geom_sf(data = map_data, aes_string(fill = attribute)) +
-    scale_fill_gradient(low = "lightgrey", high = "purple", 
-                        limits = c(global_min, global_max),
-                        name = "Number of Auto Thefts") +
-    labs(title = year) +
-    theme_minimal() + 
-    theme(
-      axis.title.x = element_blank(),
-      axis.text.x = element_blank(),
-      axis.ticks.x = element_blank(),
-      axis.title.y = element_blank(),
-      axis.text.y = element_blank(),
-      axis.ticks.y = element_blank()
-    )
-}
-
-plot1 <- create_plot("AUTOTHE25", "2014")
-plot2 <- create_plot("AUTOTHE26", "2015")
-plot3 <- create_plot("AUTOTHE27", "2016")
-plot4 <- create_plot("AUTOTHE28", "2017")
-plot5 <- create_plot("AUTOTHE29", "2018")
-plot6 <- create_plot("AUTOTHE30", "2019")
-plot7 <- create_plot("AUTOTHE31", "2020")
-plot8 <- create_plot("AUTOTHE32", "2021")
-plot9 <- create_plot("AUTOTHE33", "2022")
-plot10 <- create_plot("AUTOTHE34", "2023")
-```
-
-### Automobile Theft By Neighbourhood Over the Past Decade (2014-2023) 
-With 158 neighbourhood's in Toronto, this paper investigated which neighbourhood has had the most difficulty with auto theft over the past decade. The following data was obtained:
-```{r}
-#| label: fig-autotheftmap1
-#| fig-cap: The number of motor vehicles reported stolen from each neighbourhood in 2014.
-#| echo: false
-#| warning: false
-#| message: false
-plot1
-```
-
-```{r}
-#| label: fig-autotheftmap2
-#| fig-cap: The number of motor vehicles reported stolen from each neighbourhood in 2015.
-#| echo: false
-#| warning: false
-#| message: false
-plot2
-```
-
-```{r}
-#| label: fig-autotheftmap3
-#| fig-cap: The number of motor vehicles reported stolen from each neighbourhood in 2016.
-#| echo: false
-#| warning: false
-#| message: false
-plot3
-```
-
-```{r}
-#| label: fig-autotheftmap4
-#| fig-cap: The number of motor vehicles reported stolen from each neighbourhood in 2017.
-#| echo: false
-#| warning: false
-#| message: false
-plot4
-```
-
-```{r}
-#| label: fig-autotheftmap5
-#| fig-cap: The number of motor vehicles reported stolen from each neighbourhood in 2018.
-#| echo: false
-#| warning: false
-#| message: false
-plot5
-```
-
-```{r}
-#| label: fig-autotheftmap6
-#| fig-cap: The number of motor vehicles reported stolen from each neighbourhood in 2019.
-#| echo: false
-#| warning: false
-#| message: false
-plot6
-```
-
-```{r}
-#| label: fig-autotheftmap7
-#| fig-cap: The number of motor vehicles reported stolen from each neighbourhood in 2020.
-#| echo: false
-#| warning: false
-#| message: false
-plot7
-```
-
-```{r}
-#| label: fig-autotheftmap8
-#| fig-cap: The number of motor vehicles reported stolen from each neighbourhood in 2021.
-#| echo: false
-#| warning: false
-#| message: false
-plot8
-```
-
-```{r}
-#| label: fig-autotheftmap9
-#| fig-cap: The number of motor vehicles reported stolen from each neighbourhood in 2022.
-#| echo: false
-#| warning: false
-#| message: false
-plot9
-```
-
-```{r}
-#| label: fig-autotheftmap10
-#| fig-cap: The number of motor vehicles reported stolen from each neighbourhood in 2023.
-#| echo: false
-#| warning: false
-#| message: false
-plot10
-```
-# Discussion {#sec-discussion}
-
-## First discussion point {#sec-first-point}
-
-## Second discussion point {#sec-second-point}
-
-## Third discussion point {#sec-third-point}
-
-## Weaknesses and next steps {#sec-weaknesses-and-next-steps}
 
 \newpage
 

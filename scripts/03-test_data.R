@@ -1,43 +1,44 @@
 #### Preamble ####
-# Purpose: Runs tests on the cleaned datasets obtained from "02-data_cleaning.R"
+# Purpose: Runs tests on the cleaned dataset obtained from "02-data_cleaning.R"
 # to check the validity of the dataset entries.
 # Author: Sima Shmuylovich
-# Date: 25 January 2024
+# Date: 15 February 2024
 # Contact: sima.shmuylovich@mail.utoronto.ca
 # License: MIT
-# Pre-requisites: Run "import_packages.R", "01-download_data.R", and
-# "02-data_cleaning.R"
+# Pre-requisites: Run "99-import_packages.R", "01-download_data.R", and
+# "02-data_cleaning.R" before running this script.
 
 #### Workspace setup ####
 library(tidyverse)
 
 #### Test data ####
-cleaned_automobile_thefts_data_test <- read_csv("outputs/data/cleaned_automobile_thefts_data.csv")
-cleaned_all_crime_data_test <- read_csv("outputs/data/cleaned_all_crime_data.csv")
+cleaned_data_test <- read_csv("data/clean_data/clean_data.csv")
 
 # Dataset 1: Data Validation/Tests
-# 1. "year" does not contain years before <starting_year> or after <ending_year>
-cleaned_automobile_thefts_data_test$year %>% min() == starting_year
-cleaned_automobile_thefts_data_test$year %>% max() == ending_year
+# 1. <sequence_id> is of type character
+cleaned_data_test$seminar_id %>% typeof() %in% c("character") == TRUE
 
-# 2. <num_automobile_thefts> is greater than or equal to 0.
-cleaned_automobile_thefts_data_test$num_automobile_thefts %>% min() >= 0
+# 2. <semester> is between 2014 and 2019 inclusive
+cleaned_data_test$semester %>% min() >= as.Date("2014-01-01")
+cleaned_data_test$semester %>% min() <= as.Date("2020-01-01")
 
-# Dataset 3: Data Validation/Tests
-# 1. "year" does not contain years before <starting_year> or after <ending_year>
-cleaned_all_crime_data_test$year %>% min() == starting_year
-cleaned_all_crime_data_test$year %>% max() == ending_year
+# 3. <semester> MM-DD is either 01-01 or 08-01
+all(cleaned_data_test$semester %>% format("%m") %in% c("01", "08"))
+all(cleaned_data_test$semester %>% format("%d") == "01")
 
-# 2. We have <num_crime_types> types of crime: "Assault", "Automobile-Theft", 
-# "Bike-Theft", "Break-and-Enter", "Homicide", "Robbery", "Shooting", 
-# "Theft-from-Vehicle"
-cleaned_all_crime_data_test$crime_type %>%
-  unique() %>%
-  length() == num_crime_types
+# 4. <urm> is as expected
+all(cleaned_data_test$urm %in% c("URM", "Non-URM"))
 
-cleaned_all_crime_data_test$crime_type %>%
-  unique() %in% c("Assault", "Automobile-Theft", "Bike-Theft", "Break-and-Enter", 
-                  "Homicide", "Robbery", "Shooting", "Theft-from-Vehicle")
+# 5. <gender> is as expected
+all(cleaned_data_test$gender %in% c("Female", "Male"))
 
-# 3. Number of crime occurrences is equal to or greater than 0
-cleaned_all_crime_data_test$num_crime_occurrences %>% min() >= 0
+# 6. <region> one of the following: Midwest, Northeast, South, International, West
+all(cleaned_data_test$region %>% unique() %in% c("Midwest", "Northeast", "South", "International", "West"))
+
+#7. <demographic> is as expected
+all(cleaned_data_test$demographic %>% unique() %in% c("Non-URM Male", "Non-URM Female", "URM Male", "URM Female"))
+
+
+
+
+
