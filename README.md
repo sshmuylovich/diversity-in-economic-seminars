@@ -1,6 +1,16 @@
 # diversity-in-economic-seminars
 
-This paper investigates the changing landscape of automobile theft in Toronto over the past decade, comparing its growth to that of other crimes. Notably, this paper explores the intriguing phenomenon that despite the significant increase in automobile theft's prevalence, it has not expanded to encompass new neighborhoods. 
+TODO!!!
+
+## Replication Data Access
+
+All the raw data used for replication in this paper was from the replication package of Nuzzo and Ledesma's paper. 
+-   `other/literature` contains the paper being replicated in this report.
+-   `data/raw_data` contains the raw data from the replication package of the replicated paper.
+-   `scripts/99-replications.R` contains the R code to replicate 3 figures in the paper.
+
+Replication on Social Science Reproduction platform available at: https://www.socialsciencereproduction.org/reproductions/8938b287-6681-4a5e-8993-42011a51be58/index
+
 
 ## File Structure
 The repo is structured as:
